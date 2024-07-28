@@ -36,14 +36,14 @@ int state = 0;
 int old = 0;
 int buttonPoll = 0;
 
-#include <Adafruit_SH1106.h> 
+#include <Adafruit_SSD1306.h> 
 #define SCREEN_WIDTH 128 
 #define SCREEN_HEIGHT 64 
 
 //On an arduino UNO: A4(SDA), A5(SCL)
 #define OLED_RESET -1 //Reset pin # (or -1 if sharing Arduino reset pin) 
 #define SCREEN_ADDRESS 0x3C //See datasheet for Address   
-Adafruit_SH1106 display(OLED_RESET); 
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET); 
 
 
 #define GPS Serial    
@@ -211,12 +211,11 @@ void setup()
   pinMode(button, INPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
-  for(int i = 0; i < sizeof(UBLOX_INIT); i++) {                        
-    GPS.write( pgm_read_byte(UBLOX_INIT+i) );
-    delay(5); // simulating a 38400baud pace (or less), otherwise commands are not accepted by the device.
-  }
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  display.begin(SH1106_SWITCHCAPVCC, SCREEN_ADDRESS);
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+  }
 
   display.clearDisplay();
   display.display();
@@ -294,7 +293,7 @@ void updateScreen(){
     }
 
   display.clearDisplay();
-  display.setTextColor(WHITE);
+  display.setTextColor(SSD1306_WHITE);
 
   display.setTextSize(2);
 
