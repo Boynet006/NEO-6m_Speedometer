@@ -264,7 +264,7 @@ void loop() {
   }
   
   unsigned long now = millis();
-  if ( now - lastScreenUpdate > 30 ) {   //................. Previous value was 100 "Screen refresh rate" the higher the slower
+  if ( now - lastScreenUpdate > 100 ) {   //................. Previous value was 100 "Screen refresh rate" the higher the slower
     updateScreen();
     lastScreenUpdate = now;
     screenRefreshSpinnerPos = (screenRefreshSpinnerPos + 1) % 4;
@@ -317,4 +317,3 @@ void updateScreen(){
 
   display.display(); 
 }
-
